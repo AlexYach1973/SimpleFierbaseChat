@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">UdemyChat</string>
+
+<!--    Sign In fragment-->
+    <string name="email">email</string>
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
+    <string name="user_name">Your name</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="tap_sign_in">Tap to log iN</string>
+    <string name="tap_sign_up">Tap to Log Up</string>
+    <string name="min_character">min 6 character</string>
+    <string name="bad_email">bad email</string>
+    <string name="no_match_passwords">no match passwords</string>
+
+
+
+</resources>

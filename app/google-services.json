@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "211575108001",
+    "firebase_url": "https://testchat-9ae6b-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "testchat-9ae6b",
+    "storage_bucket": "testchat-9ae6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:211575108001:android:80fdaca8a0705a8ad1dbe0",
+        "android_client_info": {
+          "package_name": "com.alexyach.kotlin.udemychat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "211575108001-0v144dlg3tmqd8tv42a3fmpnbkpa6k0j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alexyach.kotlin.udemychat",
+            "certificate_hash": "6e7424ca365aa6c2ac4c66274e6b9174eaf03f05"
+          }
+        },
+        {
+          "client_id": "211575108001-6betglauk5vjlsl59j150kamvd8gnkjn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVFcxxvUBbE8XYH1afDRKH2bD8AcS1-m4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "211575108001-6betglauk5vjlsl59j150kamvd8gnkjn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
