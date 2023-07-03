@@ -16,7 +16,7 @@ import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentSignInBinding
 import com.alexyach.kotlin.udemychat.domain.UserModel
 import com.alexyach.kotlin.udemychat.ui.listmessages.ListMessageFragment
-import com.alexyach.kotlin.udemychat.utils.NO_LOGIN_USER
+import com.alexyach.kotlin.udemychat.ui.userlist.UserListFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -67,7 +67,7 @@ class SignInFragment : Fragment() {
 
     private fun isLoginUser() {
         if (auth.currentUser?.uid != null) {
-            goToMessageListFragment(auth.currentUser?.uid!!)
+            goToUserListFragment(auth.currentUser?.uid!!)
         }
     }
 
@@ -90,7 +90,7 @@ class SignInFragment : Fragment() {
                     Log.d("myLog", "signInWithEmail:success")
 
                     val currentUser = auth.currentUser
-                    goToMessageListFragment(currentUser?.uid?:"")
+                    goToUserListFragment(currentUser?.uid?:"")
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("myLog", "signInWithEmail:failure", task.exception)
@@ -116,7 +116,7 @@ class SignInFragment : Fragment() {
                     val firebaseUser = auth.currentUser
                     createUser(firebaseUser)
 
-                    goToMessageListFragment(firebaseUser?.uid ?: "")
+                    goToUserListFragment(firebaseUser?.uid ?: "")
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.d("myLogs", "createUserWithEmail:failure", task.exception)
@@ -248,10 +248,11 @@ class SignInFragment : Fragment() {
         return valid
     }
 
-    private fun goToMessageListFragment(userName: String) {
+    private fun goToUserListFragment(userId: String) {
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.container, ListMessageFragment.newInstance(userName))
+//            .replace(R.id.container, ListMessageFragment.newInstance(userId))
+            .replace(R.id.container, UserListFragment.newInstance(userId))
             .commit()
     }
 

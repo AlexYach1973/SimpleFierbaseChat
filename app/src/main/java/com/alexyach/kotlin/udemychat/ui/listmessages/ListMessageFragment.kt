@@ -22,19 +22,18 @@ import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentListMessageBinding
 import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.ui.signin.SignInFragment
+import com.alexyach.kotlin.udemychat.utils.KEY_CURRENT_USER_ID
 import com.alexyach.kotlin.udemychat.utils.LOG_TAG
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.UploadTask
+import okhttp3.internal.notifyAll
 
-const val KEY_CURRENT_USER_ID = "currentUser"
+//const val KEY_CURRENT_USER_ID = "currentUser"
 //const val IMAGE_FROM_LOCAL = 111
 
 class ListMessageFragment : Fragment() {
-
-    lateinit var storage: FirebaseStorage
-    lateinit var storageReference: StorageReference
 
     private var _binding: FragmentListMessageBinding? = null
     private val binding: FragmentListMessageBinding get() = _binding!!
@@ -44,7 +43,7 @@ class ListMessageFragment : Fragment() {
     }
 
     private lateinit var adapter: ListMessageAdapter
-    private var listMessage = ArrayList<MessageModel>()
+    private var listMessage = listOf<MessageModel>()
 
     private lateinit var currentUserId: String
     private var userName = "Username"
@@ -72,14 +71,13 @@ class ListMessageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        storage = FirebaseStorage.getInstance()
-        storageReference = storage.reference.child("chat_images")
 
         currentUserId = arguments?.run {
             getString(KEY_CURRENT_USER_ID)
         } ?: ""
         viewModel.currentUserId = currentUserId
 
+//        setUpAdapter(listMessage)
         setClickButtons()
         changeMessageEditText()
         observeLiveData()
@@ -102,6 +100,9 @@ class ListMessageFragment : Fragment() {
 
     private fun showMessagesList(dataList: List<MessageModel>) {
         binding.progressBarMessageList.visibility = View.GONE
+        listMessage = dataList
+
+//        adapter.notifyDataSetChanged()
         setUpAdapter(dataList)
     }
 
@@ -124,6 +125,10 @@ class ListMessageFragment : Fragment() {
     private fun setUpAdapter(messageList: List<MessageModel>) {
         adapter = ListMessageAdapter(messageList)
         binding.messagesListRecycler.adapter = adapter
+
+        adapter.notifyItemInserted(adapter.itemCount - 1)
+//        adapter.notifyDataSetChanged()
+
         binding.messagesListRecycler.smoothScrollToPosition(adapter.itemCount - 1)
     }
 
@@ -140,37 +145,7 @@ class ListMessageFragment : Fragment() {
     }
 
     private fun upLoadImage(uri: Uri) {
-//        Log.d(LOG_TAG, "uri: $uri")
-
-        val imageReference = uri.lastPathSegment?.let { storageReference.child(it) }
-        if (imageReference != null) {
-            val uploadTask: UploadTask = imageReference.putFile(uri)
-
-            val urlTask = uploadTask.continueWithTask { task ->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
-                    }
-                }
-                imageReference.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-
-                    // Шлях до зображення в Firebase
-                    val downloadUri = task.result
-                    // Відправляємо message
-                    viewModel.sendMessageToFirebase(
-                        MessageModel(
-                            name = userName,
-                            imageUrl = downloadUri.toString()
-                        )
-                    )
-                } else {
-                    // Handle failures
-                    // ...
-                }
-            }
-        }
+        viewModel.upLoadImageFromFirebase(uri, userName)
     }
 
     private fun sendMessage() {

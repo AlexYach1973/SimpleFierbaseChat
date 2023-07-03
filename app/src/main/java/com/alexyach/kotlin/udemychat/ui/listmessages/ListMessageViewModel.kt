@@ -1,11 +1,13 @@
 package com.alexyach.kotlin.udemychat.ui.listmessages
 
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.domain.UserModel
+import com.alexyach.kotlin.udemychat.utils.FIREBASE_IMAGES
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_MESSAGE
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_USERS
 import com.alexyach.kotlin.udemychat.utils.LOG_TAG
@@ -18,6 +20,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
+import com.google.firebase.storage.ktx.FirebaseStorageKtxRegistrar
 
 /** UI State */
 sealed interface MessageListUiState {
@@ -28,9 +33,12 @@ sealed interface MessageListUiState {
 /** *** */
 
 class ListMessageViewModel : ViewModel() {
-    private var database: FirebaseDatabase = Firebase.database
-    private var messagesReference: DatabaseReference = database.getReference(FIREBASE_MESSAGE)
-    private var usersReference: DatabaseReference = database.getReference(FIREBASE_USERS)
+    private val database: FirebaseDatabase = Firebase.database
+    private val messagesReference: DatabaseReference = database.getReference(FIREBASE_MESSAGE)
+    private val usersReference: DatabaseReference = database.getReference(FIREBASE_USERS)
+    private val storage = FirebaseStorage.getInstance()
+    private val storageReference = storage.reference.child(FIREBASE_IMAGES)
+
 
     private val _messageListUiState: MutableLiveData<MessageListUiState> = MutableLiveData()
     val messageListUiState: LiveData<MessageListUiState> = _messageListUiState
@@ -94,6 +102,39 @@ class ListMessageViewModel : ViewModel() {
                 _userNameLiveData.value = "No Name"
             }
         })
+    }
+
+    /** Upload Image */
+    fun upLoadImageFromFirebase(uri: Uri, userName: String){
+        val imageReference = uri.lastPathSegment?.let { storageReference.child(it) }
+        if (imageReference != null) {
+            val uploadTask: UploadTask = imageReference.putFile(uri)
+
+            val urlTask = uploadTask.continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                imageReference.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+
+                    // Шлях до зображення в Firebase
+                    val downloadUri = task.result
+                    // Відправляємо message
+                    sendMessageToFirebase(
+                        MessageModel(
+                            name = userName,
+                            imageUrl = downloadUri.toString()
+                        )
+                    )
+                } else {
+                    // Handle failures
+                    // ...
+                }
+            }
+        }
     }
 
 }

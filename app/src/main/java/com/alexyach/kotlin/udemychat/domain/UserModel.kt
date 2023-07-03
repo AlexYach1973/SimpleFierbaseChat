@@ -4,5 +4,5 @@ data class UserModel(
     val name: String = "Default",
     val email: String = "",
     val id: String = "",
-
+    val avatar: Int = 0
 )
