@@ -1,7 +1,6 @@
 package com.alexyach.kotlin.udemychat.ui.listmessages
 
 import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
@@ -23,15 +22,9 @@ import com.alexyach.kotlin.udemychat.databinding.FragmentListMessageBinding
 import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.ui.signin.SignInFragment
 import com.alexyach.kotlin.udemychat.utils.KEY_CURRENT_USER_ID
+import com.alexyach.kotlin.udemychat.utils.KEY_RECIPIENT_ID
 import com.alexyach.kotlin.udemychat.utils.LOG_TAG
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
-import okhttp3.internal.notifyAll
-
-//const val KEY_CURRENT_USER_ID = "currentUser"
-//const val IMAGE_FROM_LOCAL = 111
 
 class ListMessageFragment : Fragment() {
 
@@ -46,6 +39,7 @@ class ListMessageFragment : Fragment() {
     private var listMessage = listOf<MessageModel>()
 
     private lateinit var currentUserId: String
+    private lateinit var recipientUserId: String
     private var userName = "Username"
 
     // UpLoad File From Local
@@ -76,6 +70,11 @@ class ListMessageFragment : Fragment() {
             getString(KEY_CURRENT_USER_ID)
         } ?: ""
         viewModel.currentUserId = currentUserId
+
+        recipientUserId = arguments?.run {
+            getString(KEY_RECIPIENT_ID)
+        } ?: ""
+        viewModel.recipientUserId = recipientUserId
 
 //        setUpAdapter(listMessage)
         setClickButtons()
@@ -129,7 +128,7 @@ class ListMessageFragment : Fragment() {
         adapter.notifyItemInserted(adapter.itemCount - 1)
 //        adapter.notifyDataSetChanged()
 
-        binding.messagesListRecycler.smoothScrollToPosition(adapter.itemCount - 1)
+        if (listMessage.isNotEmpty()) binding.messagesListRecycler.smoothScrollToPosition(adapter.itemCount - 1)
     }
 
     private fun setClickButtons() {
@@ -152,7 +151,9 @@ class ListMessageFragment : Fragment() {
         viewModel.sendMessageToFirebase(
             MessageModel(
                 name = userName,
-                message = binding.messageSendEditText.text.toString()
+                message = binding.messageSendEditText.text.toString(),
+                senderId = currentUserId,
+                recipientId = recipientUserId
             )
         )
     }
@@ -214,10 +215,11 @@ class ListMessageFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(userId: String): ListMessageFragment {
+        fun newInstance(userId: String, recipientId: String): ListMessageFragment {
             return ListMessageFragment().apply {
                 arguments = Bundle().apply {
                     putString(KEY_CURRENT_USER_ID, userId)
+                    putString(KEY_RECIPIENT_ID, recipientId)
                 }
             }
         }

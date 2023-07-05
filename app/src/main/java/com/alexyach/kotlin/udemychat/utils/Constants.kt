@@ -5,5 +5,7 @@ const val FIREBASE_MESSAGE = "message"
 const val FIREBASE_USERS = "users"
 const val FIREBASE_IMAGES = "chat_images"
 const val KEY_CURRENT_USER_ID = "currentUser"
+const val KEY_RECIPIENT_ID = "recipientId"
+
 const val NO_LOGIN_USER = "noLoginUser"
 

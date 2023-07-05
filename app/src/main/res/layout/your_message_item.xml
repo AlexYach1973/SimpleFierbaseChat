@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="start"
+    android:orientation="vertical"
+    android:background="@drawable/bubble_chat3_150">
+
+    <!--<TextView
+        android:id="@+id/messageItemName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="8dp"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        tools:text="User" />-->
+
+    <ImageView
+        android:id="@+id/messageItemPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/messageItemText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        tools:text="message" />
+
+</LinearLayout>

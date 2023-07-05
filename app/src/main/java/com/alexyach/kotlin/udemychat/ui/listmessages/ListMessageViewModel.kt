@@ -30,6 +30,7 @@ sealed interface MessageListUiState {
     data class Error(val error: DatabaseError) : MessageListUiState
     object Loading : MessageListUiState
 }
+
 /** *** */
 
 class ListMessageViewModel : ViewModel() {
@@ -47,6 +48,7 @@ class ListMessageViewModel : ViewModel() {
     val userNameLiveData: LiveData<String> = _userNameLiveData
 
     var currentUserId = ""
+    var recipientUserId = ""
 
 
     init {
@@ -71,7 +73,29 @@ class ListMessageViewModel : ViewModel() {
 
                 for (s in snapshot.children) {
                     val message = s.getValue(MessageModel::class.java)
-                    if (message != null) listMessage.add(message)
+
+//                    Log.d(LOG_TAG, " before if() message= ${message?.name}")
+//                    Log.d(LOG_TAG, "MessageListener currentUserId= $currentUserId")
+//                    Log.d(LOG_TAG, "MessageListener recipientUserId= $recipientUserId")
+
+                    // Моє повідомлення
+                    if (message != null &&
+                        message.senderId == currentUserId &&
+                        message.recipientId == recipientUserId
+                    ) {
+
+                        message.isMine = true
+                        listMessage.add(message)
+
+                        // Плвідомлення оппонента
+                    } else if (message != null &&
+                        message.senderId == recipientUserId &&
+                        message.recipientId == currentUserId
+                    ) {
+                        message.isMine = false
+                        listMessage.add(message)
+                    }
+
                 }
                 _messageListUiState.value = MessageListUiState.Success(listMessage)
 
@@ -105,7 +129,7 @@ class ListMessageViewModel : ViewModel() {
     }
 
     /** Upload Image */
-    fun upLoadImageFromFirebase(uri: Uri, userName: String){
+    fun upLoadImageFromFirebase(uri: Uri, userName: String) {
         val imageReference = uri.lastPathSegment?.let { storageReference.child(it) }
         if (imageReference != null) {
             val uploadTask: UploadTask = imageReference.putFile(uri)
@@ -126,7 +150,9 @@ class ListMessageViewModel : ViewModel() {
                     sendMessageToFirebase(
                         MessageModel(
                             name = userName,
-                            imageUrl = downloadUri.toString()
+                            imageUrl = downloadUri.toString(),
+                            senderId = currentUserId,
+                            recipientId = recipientUserId
                         )
                     )
                 } else {

@@ -3,6 +3,7 @@ package com.alexyach.kotlin.udemychat.ui.userlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.domain.UserModel
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_USERS
 import com.google.firebase.auth.ktx.auth
@@ -24,11 +25,10 @@ class UserListViewModel : ViewModel() {
 
     private val usersReference: DatabaseReference = Firebase.database.getReference(FIREBASE_USERS)
 
-//    private var _userListLiveData = MutableLiveData<List<UserModel>>()
-//    val userListLiveData = _userListLiveData
-
     private val _userListUiState = MutableLiveData<UserListUiState>()
     val userListUiState: LiveData<UserListUiState> = _userListUiState
+
+//    var currentMessage = MessageModel()
 
     var currentUserId = ""
 
