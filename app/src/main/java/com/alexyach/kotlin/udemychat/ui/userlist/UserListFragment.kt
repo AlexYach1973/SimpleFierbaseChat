@@ -1,24 +1,15 @@
 package com.alexyach.kotlin.udemychat.ui.userlist
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
-import com.alexyach.kotlin.udemychat.MainActivity
 import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentUserListBinding
-import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.domain.UserModel
-import com.alexyach.kotlin.udemychat.ui.listmessages.ListMessageAdapter
 import com.alexyach.kotlin.udemychat.ui.listmessages.ListMessageFragment
 import com.alexyach.kotlin.udemychat.ui.signin.SignInFragment
 import com.alexyach.kotlin.udemychat.utils.KEY_CURRENT_USER_ID
@@ -36,9 +27,6 @@ class UserListFragment : Fragment() {
 
     //    private var userList = listOf<UserModel>()
     private lateinit var currentUserId: String
-//    private lateinit var recipientId: String
-
-//    private val currentMessage = MessageModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +34,6 @@ class UserListFragment : Fragment() {
     ): View {
         _binding = FragmentUserListBinding.inflate(inflater, container, false)
 
-        setHasOptionsMenu(true)
         return binding.root
     }
 
@@ -57,14 +44,9 @@ class UserListFragment : Fragment() {
             getString(KEY_CURRENT_USER_ID)
         } ?: ""
         viewModel.currentUserId = currentUserId
-//        currentMessage.copy(
-//            senderId = currentUserId
-//        )
 
-//        (context as MainActivity).actionBar?.title = "User List"
-
-//        setAdapter(userList)
         observeLiveData()
+        setupToolbar()
 
     }
 
@@ -129,20 +111,24 @@ class UserListFragment : Fragment() {
             .commit()
     }
 
+    /** ToolBar */
+    private fun setupToolbar() {
+        with(binding.toolbarUserList) {
+            title = "users List"
+            inflateMenu(com.alexyach.kotlin.udemychat.R.menu.menu_sign_out)
 
-    /** Menu */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_sign_out, menu)
-    }
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    com.alexyach.kotlin.udemychat.R.id.menu_sign_out -> {
+                        viewModel.signOut()
+                        goToSignInFragment()
+                        true
+                    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_sign_out -> {
-                viewModel.signOut()
-                goToSignInFragment()
+                    else -> false
+                }
             }
         }
-        return true
     }
 
     private fun goToSignInFragment() {

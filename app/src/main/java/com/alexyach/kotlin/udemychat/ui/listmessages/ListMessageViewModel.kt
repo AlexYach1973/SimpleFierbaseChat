@@ -11,7 +11,6 @@ import com.alexyach.kotlin.udemychat.utils.FIREBASE_IMAGES
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_MESSAGE
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_USERS
 import com.alexyach.kotlin.udemychat.utils.LOG_TAG
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,7 +21,6 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
-import com.google.firebase.storage.ktx.FirebaseStorageKtxRegistrar
 
 /** UI State */
 sealed interface MessageListUiState {
@@ -49,6 +47,7 @@ class ListMessageViewModel : ViewModel() {
 
     var currentUserId = ""
     var recipientUserId = ""
+    var recipientName = MutableLiveData<String>()
 
 
     init {
@@ -94,6 +93,8 @@ class ListMessageViewModel : ViewModel() {
                     ) {
                         message.isMine = false
                         listMessage.add(message)
+                        recipientName.value = message.name
+                        Log.d(LOG_TAG, "VieModel recipientName = ${message.name}")
                     }
 
                 }

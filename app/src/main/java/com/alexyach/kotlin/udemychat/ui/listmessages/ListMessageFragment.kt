@@ -2,28 +2,23 @@ package com.alexyach.kotlin.udemychat.ui.listmessages
 
 import android.app.Activity
 import android.net.Uri
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentListMessageBinding
 import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.ui.signin.SignInFragment
 import com.alexyach.kotlin.udemychat.utils.KEY_CURRENT_USER_ID
 import com.alexyach.kotlin.udemychat.utils.KEY_RECIPIENT_ID
-import com.alexyach.kotlin.udemychat.utils.LOG_TAG
 import com.google.firebase.database.DatabaseError
 
 class ListMessageFragment : Fragment() {
@@ -40,6 +35,7 @@ class ListMessageFragment : Fragment() {
 
     private lateinit var currentUserId: String
     private lateinit var recipientUserId: String
+    private var recipientName = ""
     private var userName = "Username"
 
     // UpLoad File From Local
@@ -58,13 +54,11 @@ class ListMessageFragment : Fragment() {
     ): View {
         _binding = FragmentListMessageBinding.inflate(inflater, container, false)
 
-        setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         currentUserId = arguments?.run {
             getString(KEY_CURRENT_USER_ID)
@@ -76,6 +70,7 @@ class ListMessageFragment : Fragment() {
         } ?: ""
         viewModel.recipientUserId = recipientUserId
 
+        setupToolbar()
 //        setUpAdapter(listMessage)
         setClickButtons()
         changeMessageEditText()
@@ -95,11 +90,17 @@ class ListMessageFragment : Fragment() {
             userName = it
 //            Log.d(LOG_TAG, "observe name= $it")
         }
+
+        viewModel.recipientName.observe(viewLifecycleOwner) {
+            recipientName = it
+            setupToolbar()
+        }
     }
 
     private fun showMessagesList(dataList: List<MessageModel>) {
         binding.progressBarMessageList.visibility = View.GONE
         listMessage = dataList
+
 
 //        adapter.notifyDataSetChanged()
         setUpAdapter(dataList)
@@ -128,7 +129,9 @@ class ListMessageFragment : Fragment() {
         adapter.notifyItemInserted(adapter.itemCount - 1)
 //        adapter.notifyDataSetChanged()
 
-        if (listMessage.isNotEmpty()) binding.messagesListRecycler.smoothScrollToPosition(adapter.itemCount - 1)
+        if (listMessage.isNotEmpty()) {
+            binding.messagesListRecycler.smoothScrollToPosition(adapter.itemCount - 1)
+        }
     }
 
     private fun setClickButtons() {
@@ -187,19 +190,27 @@ class ListMessageFragment : Fragment() {
 
     }
 
-    /** Menu */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_sign_out, menu)
-    }
+    /** ToolBar */
+    private fun setupToolbar() {
+        with(binding.toolbarListMessage) {
+            title = " $recipientName"
+            inflateMenu(R.menu.menu_sign_out)
+            logo = resources.getDrawable(R.drawable.user_logo)
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_sign_out -> {
-                viewModel.signOut()
-                goToSignInFragment()
+            setBackgroundColor(resources.getColor(R.color.gray_light))
+
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.menu_sign_out -> {
+                        viewModel.signOut()
+                        goToSignInFragment()
+                        true
+                    }
+
+                    else -> false
+                }
             }
         }
-        return true
     }
 
     private fun goToSignInFragment() {

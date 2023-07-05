@@ -1,12 +1,10 @@
 package com.alexyach.kotlin.udemychat.ui.listmessages
 
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.alexyach.kotlin.udemychat.databinding.MessageItemBinding
 import com.alexyach.kotlin.udemychat.databinding.MyMessageItemBinding
 import com.alexyach.kotlin.udemychat.databinding.YourMessageItemBinding
 import com.alexyach.kotlin.udemychat.domain.MessageModel
@@ -17,7 +15,7 @@ class ListMessageAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        if (viewType == 0) {
+        if (viewType == WhoseMessage.MY_MESSAGE.message) {
             val binding = MyMessageItemBinding.inflate(LayoutInflater.from(parent.context))
             return MyMessageViewHolder(binding.root)
         } else {
@@ -28,9 +26,9 @@ class ListMessageAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return if (dataList[position].isMine) {
-            0
+            WhoseMessage.MY_MESSAGE.message
         } else {
-            1
+            WhoseMessage.YOUR_MESSAGE.message
         }
     }
 
@@ -39,7 +37,7 @@ class ListMessageAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getItemViewType(position) == 0) {
+        if (getItemViewType(position) == WhoseMessage.MY_MESSAGE.message) {
             (holder as MyMessageViewHolder).bind(dataList[position])
         } else {
             (holder as YourMessageViewHolder).bind(dataList[position])
@@ -86,4 +84,8 @@ class ListMessageAdapter(
             }
         }
     }
+}
+enum class WhoseMessage(val message: Int) {
+    MY_MESSAGE(0),
+    YOUR_MESSAGE(1)
 }

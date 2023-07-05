@@ -3,7 +3,6 @@ package com.alexyach.kotlin.udemychat.ui.userlist
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.domain.UserModel
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_USERS
 import com.google.firebase.auth.ktx.auth

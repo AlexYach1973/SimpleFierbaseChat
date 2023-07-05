@@ -1,9 +1,8 @@
 package com.alexyach.kotlin.udemychat
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.alexyach.kotlin.udemychat.databinding.ActivityMainBinding
-import com.alexyach.kotlin.udemychat.ui.listmessages.ListMessageFragment
 import com.alexyach.kotlin.udemychat.ui.signin.SignInFragment
 
 class MainActivity : AppCompatActivity() {

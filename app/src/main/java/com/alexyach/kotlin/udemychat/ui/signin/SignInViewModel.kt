@@ -1,10 +1,8 @@
 package com.alexyach.kotlin.udemychat.ui.signin
 
 import androidx.lifecycle.ViewModel
-import com.alexyach.kotlin.udemychat.domain.MessageModel
 import com.alexyach.kotlin.udemychat.domain.UserModel
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_USERS
-import com.alexyach.kotlin.udemychat.utils.NO_LOGIN_USER
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference

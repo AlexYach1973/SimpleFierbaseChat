@@ -7,16 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.listmessages.ListMessageFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarListMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messagesListRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:padding="4dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:background="@color/purple_200"
+        android:background="@color/gray_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarListMessage"
         app:layout_constraintBottom_toTopOf="@+id/messageSendEditText"/>
 
 

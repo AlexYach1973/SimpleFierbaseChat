@@ -2,20 +2,19 @@ package com.alexyach.kotlin.udemychat.ui.signin
 
 import android.app.Activity
 import android.graphics.Color
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentSignInBinding
 import com.alexyach.kotlin.udemychat.domain.UserModel
-import com.alexyach.kotlin.udemychat.ui.listmessages.ListMessageFragment
 import com.alexyach.kotlin.udemychat.ui.userlist.UserListFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
