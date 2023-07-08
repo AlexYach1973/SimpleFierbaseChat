@@ -1,108 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".ui.signin.SignInFragment">
 
-    <!--<ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/sign_in"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="10dp"
-        android:layout_gravity="center"/>-->
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/email"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:endIconMode="clear_text"
-        app:endIconTint="@color/teal_700"
+    <LinearLayout
+        android:id="@+id/llSignByEmailAndPassword"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:padding="4dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/inputEmail"
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            app:endIconMode="clear_text"
+            app:endIconTint="@color/teal_700">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:endIconCheckable="true"
-        app:endIconMode="password_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:padding="4dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/inputPassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/password"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            app:endIconCheckable="true"
+            app:endIconMode="password_toggle">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/repeatPassword"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:endIconCheckable="true"
-        app:endIconMode="password_toggle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:padding="4dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/inputRepeatPassword"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/repeatPassword"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/repeat_password"
-            android:inputType="textPassword" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_margin="4dp"
+            android:padding="4dp"
+            app:endIconCheckable="true"
+            app:endIconMode="password_toggle">
 
-    <EditText
-        android:id="@+id/userName"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputRepeatPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/repeat_password"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <EditText
+            android:id="@+id/userName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:hint="@string/user_name"
+            android:padding="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signUpButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp"
+            android:enabled="false"
+            android:padding="8dp"
+            android:text="@string/sign_up"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:cornerRadius="14dp"
+            app:icon="@drawable/ic_sign_in"
+            app:iconGravity="start"
+            app:iconSize="38dp" />
+
+        <TextView
+            android:id="@+id/toggleLoginInUpTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:clickable="true"
+            android:text="@string/tap_sign_in"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+<!--    Gmail-->
+    <LinearLayout
+        android:id="@+id/llSignByGmail"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:hint="@string/user_name"
-        android:padding="4dp" />
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/signUpButton"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/gmail_logo2"
+            android:contentDescription="@string/icon_gmail"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signUpGmailButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="8dp"
+            android:text="@string/sign_up"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:cornerRadius="14dp"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="8dp"
-        android:enabled="false"
-        android:padding="8dp"
-        android:text="@string/sign_up"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:cornerRadius="14dp"
-        app:icon="@drawable/ic_sign_in"
-        app:iconGravity="start"
-        app:iconSize="38dp" />
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:paddingBottom="100dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/toggleLoginInUpTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="8dp"
-        android:clickable="true"
-        android:text="@string/tap_sign_in"
-        android:textSize="18sp" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvIconEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/cardview_compat_inset_shadow"
+            app:cardElevation="8dp"
+            android:layout_marginBottom="8dp"
+            >
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/iconEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_email"
+                android:textStyle="bold"
+                android:textColor="@color/purple_700"
+                android:textSize="28sp"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvIconGmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/cardview_compat_inset_shadow"
+            app:cardElevation="0dp"
+            >
+            <TextView
+                android:id="@+id/iconGmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/icon_gmail"
+                android:textStyle="bold"
+                android:textSize="28sp"/>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Emty"
+            android:textSize="26sp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

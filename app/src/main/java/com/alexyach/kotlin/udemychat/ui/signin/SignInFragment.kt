@@ -1,6 +1,7 @@
 package com.alexyach.kotlin.udemychat.ui.signin
 
 import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -10,14 +11,22 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentSignInBinding
 import com.alexyach.kotlin.udemychat.domain.UserModel
 import com.alexyach.kotlin.udemychat.ui.userlist.UserListFragment
+import com.alexyach.kotlin.udemychat.utils.LOG_TAG
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import java.util.regex.Pattern
@@ -31,7 +40,8 @@ class SignInFragment : Fragment() {
         ViewModelProvider(this)[SignInViewModel::class.java]
     }
 
-    lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
+    private lateinit var launcher: ActivityResultLauncher<Intent>
     private var loginModeActive = false
 
     // [email, password, repeatPassword]
@@ -50,9 +60,24 @@ class SignInFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         auth = Firebase.auth
 
+        launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    firebaseAuthWithGoogle(account.idToken!!)
+                }
+            } catch (e: ApiException) {
+                Log.d(LOG_TAG, "ApiException; $e")
+            }
+        }
+
         isLoginUser()
         validTextSign()
+        clickListener()
+    }
 
+    private fun clickListener() {
         binding.signUpButton.setOnClickListener {
             signInUpMode()
             hideKeyboard(it)
@@ -62,6 +87,17 @@ class SignInFragment : Fragment() {
             toggleLoginMode()
         }
 
+        binding.cvIconEmail.setOnClickListener {
+            toggleGmailEmail(true)
+        }
+
+        binding.cvIconGmail.setOnClickListener {
+            toggleGmailEmail(false)
+        }
+
+        binding.signUpGmailButton.setOnClickListener {
+            signInWithGoogle()
+        }
     }
 
     private fun isLoginUser() {
@@ -78,6 +114,7 @@ class SignInFragment : Fragment() {
         }
     }
 
+    /** Email & Password */
     private fun signInCurrentUserWithEmail() {
         val email = binding.inputEmail.text.toString().trim()
         val password = binding.inputPassword.text.toString().trim()
@@ -111,11 +148,11 @@ class SignInFragment : Fragment() {
             .addOnCompleteListener(requireActivity()) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d("myLogs", "createUserWithEmail:success")
                     val firebaseUser = auth.currentUser
                     createUser(firebaseUser)
-
                     goToUserListFragment(firebaseUser?.uid ?: "")
+
+                    Log.d("myLogs", "createUserWithEmail:success")
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.d("myLogs", "createUserWithEmail:failure", task.exception)
@@ -128,7 +165,6 @@ class SignInFragment : Fragment() {
                 }
             }
     }
-
     private fun createUser(firebaseUser: FirebaseUser?) {
         if (firebaseUser != null) {
             val user = UserModel(
@@ -142,6 +178,55 @@ class SignInFragment : Fragment() {
             toast("User not found")
         }
     }
+
+    /** Gmail */
+    private fun signInWithGoogle() {
+        val signInClient = getClient()
+        launcher.launch(signInClient.signInIntent)
+    }
+
+    private fun getClient(): GoogleSignInClient {
+        val gso = GoogleSignInOptions
+            .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        return GoogleSignIn.getClient(requireContext(), gso)
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(LOG_TAG, "Success SignIn")
+
+                /** Записати, якщо в перший раз */
+                val newUser: Boolean = task.result.additionalUserInfo?.isNewUser ?: true
+                if (newUser) {
+                    val user: FirebaseUser? = auth.currentUser
+                    createUserGmail(user)
+                    Log.d(LOG_TAG, "firebaseAuthWithGoogle: newUser: $newUser")
+                }
+
+                isLoginUser()
+            } else {
+                Log.d(LOG_TAG, "ERROR Sign In by Google")
+            }
+        }
+    }
+
+    private fun createUserGmail(firebaseUser: FirebaseUser?) {
+        if (firebaseUser != null) {
+            val user = UserModel(
+                name = firebaseUser.displayName!!,
+                email = firebaseUser.email!!,
+                id = firebaseUser.uid
+            )
+
+            viewModel.saveUserToFirebase(user)
+        }
+    }
+    /** End Gmail */
 
     private fun toggleLoginMode() {
         if (loginModeActive) {
@@ -178,6 +263,28 @@ class SignInFragment : Fragment() {
         }
     }
 
+    private fun toggleGmailEmail(isEmail: Boolean) {
+        if (isEmail) {
+            with(binding) {
+                llSignByEmailAndPassword.visibility = View.VISIBLE
+                llSignByGmail.visibility = View.GONE
+                cvIconEmail.elevation = 8F
+                cvIconGmail.elevation = 0F
+                iconEmail.setTextColor(resources.getColor(R.color.purple_700, null))
+                iconGmail.setTextColor(resources.getColor(R.color.gray_light, null))
+            }
+        } else {
+                with(binding) {
+                    llSignByEmailAndPassword.visibility = View.GONE
+                    llSignByGmail.visibility = View.VISIBLE
+                    cvIconEmail.elevation = 0F
+                    cvIconGmail.elevation = 8F
+                    iconEmail.setTextColor(resources.getColor(R.color.gray_light, null))
+                    iconGmail.setTextColor(resources.getColor(R.color.purple_700, null))
+                }
+            }
+    }
+
     private fun validTextSign() {
         val checkPassword: Pattern = Pattern.compile(".{6,}")
 
@@ -203,7 +310,7 @@ class SignInFragment : Fragment() {
         binding.inputPassword.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) return@setOnFocusChangeListener
 
-            val text: String = (v as EditText).text.toString()
+            val text: String = ((v as EditText).text.toString())
 
                 if (checkPassword.matcher(text).matches()) {
                     binding.password.error = null
@@ -256,7 +363,6 @@ class SignInFragment : Fragment() {
     private fun goToUserListFragment(userId: String) {
         requireActivity().supportFragmentManager
             .beginTransaction()
-//            .replace(R.id.container, ListMessageFragment.newInstance(userId))
             .replace(R.id.container, UserListFragment.newInstance(userId))
             .commit()
     }
@@ -269,8 +375,8 @@ class SignInFragment : Fragment() {
 
     }
 
-    private fun toast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    private fun toast(text: String) {
+        Toast.makeText(requireContext(), text, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

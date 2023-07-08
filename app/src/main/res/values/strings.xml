@@ -8,11 +8,14 @@
     <string name="user_name">Your name</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
-    <string name="tap_sign_in">Tap to log iN</string>
+    <string name="tap_sign_in">Tap to log in</string>
     <string name="tap_sign_up">Tap to Log Up</string>
     <string name="min_character">min 6 character</string>
     <string name="bad_email">bad email</string>
     <string name="no_match_passwords">no match passwords</string>
+    <string name="icon_email">EMAIL</string>
+    <string name="icon_gmail">GMAIL</string>
+
 
 
 
