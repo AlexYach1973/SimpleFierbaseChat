@@ -94,7 +94,7 @@ class ListMessageViewModel : ViewModel() {
                         message.isMine = false
                         listMessage.add(message)
                         recipientName.value = message.name
-                        Log.d(LOG_TAG, "VieModel recipientName = ${message.name}")
+//                        Log.d(LOG_TAG, "VieModel recipientName = ${message.name}")
                     }
 
                 }

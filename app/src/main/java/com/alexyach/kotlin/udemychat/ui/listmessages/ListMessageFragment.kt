@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +14,18 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentListMessageBinding
 import com.alexyach.kotlin.udemychat.domain.MessageModel
+import com.alexyach.kotlin.udemychat.ui.listmessages.adapter.ListMessageAdapter
+import com.alexyach.kotlin.udemychat.ui.listmessages.adapter.RecyclerViewItemDecorator
 import com.alexyach.kotlin.udemychat.ui.signin.SignInFragment
 import com.alexyach.kotlin.udemychat.utils.KEY_CURRENT_USER_ID
 import com.alexyach.kotlin.udemychat.utils.KEY_RECIPIENT_ID
+import com.alexyach.kotlin.udemychat.utils.LOG_TAG
 import com.google.firebase.database.DatabaseError
 
 class ListMessageFragment : Fragment() {
@@ -72,6 +79,7 @@ class ListMessageFragment : Fragment() {
 
         setupToolbar()
 //        setUpAdapter(listMessage)
+        setupRecyclerView()
         setClickButtons()
         changeMessageEditText()
         observeLiveData()
@@ -102,6 +110,7 @@ class ListMessageFragment : Fragment() {
         listMessage = dataList
 
 
+
 //        adapter.notifyDataSetChanged()
         setUpAdapter(dataList)
     }
@@ -125,13 +134,23 @@ class ListMessageFragment : Fragment() {
     private fun setUpAdapter(messageList: List<MessageModel>) {
         adapter = ListMessageAdapter(messageList)
         binding.messagesListRecycler.adapter = adapter
+    }
 
-        adapter.notifyItemInserted(adapter.itemCount - 1)
-//        adapter.notifyDataSetChanged()
+    private fun setupRecyclerView() {
+        val layoutManager = LinearLayoutManager(requireContext())
+        layoutManager.stackFromEnd = true // До кінця списку
 
-        if (listMessage.isNotEmpty()) {
-            binding.messagesListRecycler.smoothScrollToPosition(adapter.itemCount - 1)
-        }
+//        Log.d(LOG_TAG,"${ layoutManager.reverseLayout }")
+//        layoutManager.reverseLayout
+//        Log.d(LOG_TAG,"${ layoutManager.reverseLayout }")
+
+        binding.messagesListRecycler.layoutManager = layoutManager
+
+        binding.messagesListRecycler.addItemDecoration(RecyclerViewItemDecorator())
+
+//        if (listMessage.isNotEmpty()) {
+//            binding.messagesListRecycler.smoothScrollToPosition(adapter.itemCount - 1)
+//        }
     }
 
     private fun setClickButtons() {
@@ -192,25 +211,28 @@ class ListMessageFragment : Fragment() {
 
     /** ToolBar */
     private fun setupToolbar() {
+
         with(binding.toolbarListMessage) {
             title = " $recipientName"
-            inflateMenu(R.menu.menu_sign_out)
             logo = resources.getDrawable(R.drawable.user_logo)
-
             setBackgroundColor(resources.getColor(R.color.gray_light))
 
+            // Menu
+            menu.clear()
+            inflateMenu(R.menu.menu_sign_out)
             setOnMenuItemClickListener {
-                when (it.itemId) {
+                when(it.itemId) {
                     R.id.menu_sign_out -> {
                         viewModel.signOut()
                         goToSignInFragment()
                         true
                     }
 
-                    else -> false
+                    else ->  false
                 }
             }
         }
+//        binding.toolbarListMessage.
     }
 
     private fun goToSignInFragment() {
@@ -237,3 +259,15 @@ class ListMessageFragment : Fragment() {
     }
 
 }
+
+/*
+object DateUtil {
+    fun formatTime(timeInMillis: Long): String {
+        val dateFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+        return dateFormat.format(timeInMillis)
+    }
+    fun formatDate(timeInMillis: Long): String {
+        val dateFormat = SimpleDateFormat("MMMM dd", Locale.getDefault())
+        return dateFormat.format(timeInMillis)
+    }
+}*/

@@ -35,7 +35,7 @@ class SignInFragment : Fragment() {
     private var loginModeActive = false
 
     // [email, password, repeatPassword]
-    private var validTextList =  mutableListOf(false, false, false)
+    private var validListTextFields =  mutableListOf(false, false, false)
 
 
     override fun onCreateView(
@@ -156,7 +156,7 @@ class SignInFragment : Fragment() {
                 inputPassword.text = null
                 inputRepeatPassword.text = null
                 inputEmail.text = null
-                validTextList = mutableListOf(false, false, false)
+                validListTextFields = mutableListOf(false, false, false)
                 binding.signUpButton.isEnabled = false
 
             }
@@ -172,7 +172,7 @@ class SignInFragment : Fragment() {
 
                 inputPassword.text = null
                 inputEmail.text = null
-                validTextList = mutableListOf(false, false, false)
+                validListTextFields = mutableListOf(false, false, false)
                 binding.signUpButton.isEnabled = false
             }
         }
@@ -183,35 +183,39 @@ class SignInFragment : Fragment() {
 
         // Проверяем email
         binding.inputEmail.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) return@setOnFocusChangeListener
+
             val text: String = (v as EditText).text.trim().toString()
 
             if (text.isEmpty() || !text.contains("@")) {
                 binding.email.error = resources.getText(R.string.bad_email)
                 binding.email.boxStrokeColor = Color.RED
-                validTextList[0] = false
+                validListTextFields[0] = false
             } else {
                 binding.email.error = null
                 binding.email.boxStrokeColor = Color.GREEN
-                validTextList[0] = true
+                validListTextFields[0] = true
             }
             if (isEnableSignButton()) binding.signUpButton.isEnabled = true
         }
 
         // Проверяем Password
         binding.inputPassword.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) return@setOnFocusChangeListener
+
             val text: String = (v as EditText).text.toString()
 
                 if (checkPassword.matcher(text).matches()) {
                     binding.password.error = null
                     binding.password.boxStrokeColor = Color.GREEN
-                    validTextList[1] = true
+                    validListTextFields[1] = true
 
                     // Якщо просто логінимся
-                    if (loginModeActive) validTextList[2] = true
+                    if (loginModeActive) validListTextFields[2] = true
                 } else {
                     binding.password.error = resources.getText(R.string.min_character)
                     binding.password.boxStrokeColor = Color.RED
-                    validTextList[1] = false
+                    validListTextFields[1] = false
                 }
             if (isEnableSignButton()) binding.signUpButton.isEnabled =
                 true
@@ -220,17 +224,19 @@ class SignInFragment : Fragment() {
         // Проверяем repeatPassword
         if (!loginModeActive) {
             binding.inputRepeatPassword.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) return@setOnFocusChangeListener
+
                 val text: String = (v as EditText).text.trim().toString()
 
                 if (text == binding.inputPassword.text?.trim().toString()) {
                     binding.repeatPassword.error = null
                     binding.repeatPassword.boxStrokeColor = Color.GREEN
-                    validTextList[2] = true
+                    validListTextFields[2] = true
 //                    Log.d("myLogs", "validTextSign(): ${text} = ${binding.inputPassword.text} true")
                 } else {
                     binding.repeatPassword.error = resources.getText(R.string.no_match_passwords)
                     binding.repeatPassword.boxStrokeColor = Color.RED
-                    validTextList[2] = false
+                    validListTextFields[2] = false
                 }
                 if (isEnableSignButton()) binding.signUpButton.isEnabled =
                     true
@@ -241,8 +247,8 @@ class SignInFragment : Fragment() {
 
     private fun isEnableSignButton(): Boolean {
         val valid = true
-        for (i in validTextList) {
-            if (!i) return false
+        for (validItem in validListTextFields) {
+            if (!validItem) return false
         }
         return valid
     }

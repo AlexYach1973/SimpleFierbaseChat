@@ -1,4 +1,4 @@
-package com.alexyach.kotlin.udemychat.ui.listmessages
+package com.alexyach.kotlin.udemychat.ui.listmessages.adapter
 
 import android.view.LayoutInflater
 import android.view.View

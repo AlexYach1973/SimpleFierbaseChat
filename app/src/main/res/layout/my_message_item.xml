@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:id="@+id/myMessageItem"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bubble_chat1_150">
 
@@ -29,9 +31,10 @@
         android:id="@+id/messageItemText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="68dp"
         android:padding="4dp"
         android:textColor="@color/my_message"
         android:textStyle="bold"
         tools:text="message" />
 </LinearLayout>
+
+<!--    android:layout_gravity="end"-->
