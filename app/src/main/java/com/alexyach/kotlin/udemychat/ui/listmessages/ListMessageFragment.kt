@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,8 +14,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.alexyach.kotlin.udemychat.R
 import com.alexyach.kotlin.udemychat.databinding.FragmentListMessageBinding
 import com.alexyach.kotlin.udemychat.domain.MessageModel
@@ -25,7 +22,6 @@ import com.alexyach.kotlin.udemychat.ui.listmessages.adapter.RecyclerViewItemDec
 import com.alexyach.kotlin.udemychat.ui.signin.SignInFragment
 import com.alexyach.kotlin.udemychat.utils.KEY_CURRENT_USER_ID
 import com.alexyach.kotlin.udemychat.utils.KEY_RECIPIENT_ID
-import com.alexyach.kotlin.udemychat.utils.LOG_TAG
 import com.google.firebase.database.DatabaseError
 
 class ListMessageFragment : Fragment() {
@@ -214,8 +210,8 @@ class ListMessageFragment : Fragment() {
 
         with(binding.toolbarListMessage) {
             title = " $recipientName"
-            logo = resources.getDrawable(R.drawable.user_logo)
-            setBackgroundColor(resources.getColor(R.color.gray_light))
+            logo = resources.getDrawable(R.drawable.user_logo, null)
+            setBackgroundColor(resources.getColor(R.color.gray_light, null))
 
             // Menu
             menu.clear()

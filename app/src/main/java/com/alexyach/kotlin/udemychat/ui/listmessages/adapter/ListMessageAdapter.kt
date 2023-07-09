@@ -69,8 +69,6 @@ class ListMessageAdapter(
         private val binding = YourMessageItemBinding.bind(itemView)
 
         fun bind(message: MessageModel) {
-
-//            binding.messageItemName.text = message.name
             binding.messageItemText.text = message.message
 
             if (message.imageUrl != null) {

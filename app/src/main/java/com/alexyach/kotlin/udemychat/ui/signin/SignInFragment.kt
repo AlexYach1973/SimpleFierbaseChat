@@ -310,8 +310,7 @@ class SignInFragment : Fragment() {
         binding.inputPassword.setOnFocusChangeListener { v, hasFocus ->
             if (hasFocus) return@setOnFocusChangeListener
 
-            val text: String = ((v as EditText).text.toString())
-
+            val text: String = (v as EditText).text.toString()
                 if (checkPassword.matcher(text).matches()) {
                     binding.password.error = null
                     binding.password.boxStrokeColor = Color.GREEN

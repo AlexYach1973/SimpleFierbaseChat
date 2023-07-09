@@ -115,11 +115,11 @@ class UserListFragment : Fragment() {
     private fun setupToolbar() {
         with(binding.toolbarUserList) {
             title = "users List"
-            inflateMenu(com.alexyach.kotlin.udemychat.R.menu.menu_sign_out)
+            inflateMenu(R.menu.menu_sign_out)
 
             setOnMenuItemClickListener {
                 when (it.itemId) {
-                    com.alexyach.kotlin.udemychat.R.id.menu_sign_out -> {
+                    R.id.menu_sign_out -> {
                         viewModel.signOut()
                         goToSignInFragment()
                         true

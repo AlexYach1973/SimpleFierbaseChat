@@ -27,8 +27,6 @@ class UserListViewModel : ViewModel() {
     private val _userListUiState = MutableLiveData<UserListUiState>()
     val userListUiState: LiveData<UserListUiState> = _userListUiState
 
-//    var currentMessage = MessageModel()
-
     var currentUserId = ""
 
 
@@ -60,7 +58,6 @@ class UserListViewModel : ViewModel() {
             override fun onCancelled(error: DatabaseError) {
                 _userListUiState.value = UserListUiState.Error(error)
             }
-
         })
     }
 

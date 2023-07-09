@@ -1,7 +1,6 @@
 package com.alexyach.kotlin.udemychat.ui.listmessages
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +9,6 @@ import com.alexyach.kotlin.udemychat.domain.UserModel
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_IMAGES
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_MESSAGE
 import com.alexyach.kotlin.udemychat.utils.FIREBASE_USERS
-import com.alexyach.kotlin.udemychat.utils.LOG_TAG
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
